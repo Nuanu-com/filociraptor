@@ -1,21 +1,50 @@
 #!/bin/bash
 
 # Auto install basic server stack
-# Nginx, Docker, Docker Compose, net-tools, rsync
+# Nginx, Docker, Docker Compose, net-tools, rsync, Fail2Ban
 
 echo "======================================="
-echo " Installing NGINX, Docker, Docker Compose, net-tools, rsync"
+echo " Installing NGINX, Docker, Docker Compose, net-tools, rsync, Fail2Ban"
 echo "======================================="
 
 # Update system
 sudo apt update -y && sudo apt upgrade -y
 
 # Install general packages
-sudo apt install -y nginx net-tools rsync curl ca-certificates gnupg lsb-release
+sudo apt install -y nginx net-tools rsync curl ca-certificates gnupg lsb-release fail2ban
 
 # Enable and start NGINX
 sudo systemctl enable nginx
 sudo systemctl start nginx
+
+echo "---- Installing Fail2Ban basic configuration ----"
+
+sudo tee /etc/fail2ban/jail.local >/dev/null <<EOF
+[DEFAULT]
+bantime = 30m
+findtime = 10m
+maxretry = 5
+backend = systemd
+ignoreip = 127.0.0.1/8
+
+[sshd]
+enabled = true
+
+[nginx-http-auth]
+enabled = true
+
+[nginx-botsearch]
+enabled = true
+
+[nginx-req-limit]
+enabled = true
+EOF
+
+sudo systemctl enable fail2ban
+sudo systemctl restart fail2ban
+
+echo " Fail2Ban status:"
+sudo fail2ban-client status
 
 echo "---- Installing Docker ----"
 # Remove older Docker
@@ -24,6 +53,7 @@ sudo apt remove -y docker docker-engine docker.io containerd runc
 # Setup Docker repo
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
@@ -50,5 +80,9 @@ nginx -v
 docker --version
 docker-compose --version
 echo "======================================="
-echo " You may need to re-login or run: sudo usermod -aG docker \$USER"
+echo " Fail2Ban active jails:"
+sudo fail2ban-client status
+echo "======================================="
+echo "Add current user to docker group:"
+echo " sudo usermod -aG docker \$USER"
 echo "======================================="
