@@ -88,9 +88,8 @@ else
 sudo tee $CONFIG_PATH > /dev/null <<EOF
 server {
     listen 80;
-    listen [::]:80;
 
-    server_name $DOMAIN www.$DOMAIN;
+    server_name $DOMAIN;
 
     root $ROOT;
     index index.html index.htm;
