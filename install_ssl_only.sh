@@ -28,9 +28,9 @@ echo " Requesting Let's Encrypt SSL certificate"
 echo "----------------------------------------------"
 
 if [[ "$REDIRECT" == "y" || "$REDIRECT" == "Y" ]]; then
-    sudo certbot --nginx -d $DOMAIN -d www.$DOMAIN --email $EMAIL --agree-tos --redirect
+    sudo certbot --nginx -d $DOMAIN --email $EMAIL --agree-tos --redirect
 else
-    sudo certbot --nginx -d $DOMAIN -d www.$DOMAIN --email $EMAIL --agree-tos
+    sudo certbot --nginx -d $DOMAIN --email $EMAIL --agree-tos
 fi
 
 echo ""
