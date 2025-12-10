@@ -1,6 +1,5 @@
 # How to Run
 Clone using HTTP dont forget to run
-sudo chmod +x install_ssl_only.sh
-sudo chmod +x install_nginx_letsencrypt_optional.sh
+sudo chmod +x [FILE].sh
 
 enjoy !!
