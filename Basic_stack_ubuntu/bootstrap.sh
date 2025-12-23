@@ -21,10 +21,16 @@ echo "Updating system..."
 apt update && apt upgrade -y
 
 # -----------------------------
-# Install netstat (net-tools)
+# Base Utilities (netstat + git)
 # -----------------------------
-echo "Installing net-tools (netstat)..."
-apt install -y net-tools curl ca-certificates gnupg lsb-release
+echo "Installing base utilities (net-tools, git)..."
+apt install -y \
+  net-tools \
+  git \
+  curl \
+  ca-certificates \
+  gnupg \
+  lsb-release
 
 # -----------------------------
 # Install Docker
@@ -32,7 +38,6 @@ apt install -y net-tools curl ca-certificates gnupg lsb-release
 echo "Installing Docker..."
 curl -fsSL https://get.docker.com | bash
 
-# Enable Docker at boot
 systemctl enable docker
 systemctl start docker
 
@@ -72,7 +77,6 @@ chmod 700 "$SSH_DIR"
 touch "$AUTHORIZED_KEYS"
 chmod 600 "$AUTHORIZED_KEYS"
 
-# Avoid duplicate key
 grep -qxF "$SSH_PUBLIC_KEY" "$AUTHORIZED_KEYS" || echo "$SSH_PUBLIC_KEY" >> "$AUTHORIZED_KEYS"
 
 chown -R "$USERNAME:$USERNAME" "$SSH_DIR"
@@ -84,6 +88,7 @@ echo "===================================="
 echo " Bootstrap completed successfully!"
 echo " Installed:"
 echo "  - netstat (net-tools)"
+echo "  - git"
 echo "  - Docker"
 echo "  - Docker Compose"
 echo "  - k9s"
