@@ -1,0 +1,15 @@
+✅ What this script does
+
+Update system
+
+Install netstat (net-tools)
+
+Install Docker Engine
+
+Install Docker Compose (plugin)
+
+Install k9s
+
+Add your SSH public key to ~/.ssh/authorized_keys
+
+Apply correct SSH permissions
