@@ -67,9 +67,9 @@ if [ "$INSTALL_SSL" = true ]; then
     sudo apt install certbot python3-certbot-nginx -y
 
     if [[ "$REDIRECT" == "y" || "$REDIRECT" == "Y" ]]; then
-        sudo certbot --nginx -d $DOMAIN -d www.$DOMAIN --email $EMAIL --agree-tos --redirect
+        sudo certbot --nginx -d $DOMAIN --email $EMAIL --agree-tos --redirect
     else
-        sudo certbot --nginx -d $DOMAIN -d www.$DOMAIN --email $EMAIL --agree-tos
+        sudo certbot --nginx -d $DOMAIN --email $EMAIL --agree-tos
     fi
 
     sudo systemctl enable certbot.timer
@@ -78,7 +78,7 @@ if [ "$INSTALL_SSL" = true ]; then
 else
     echo "SSL installation skipped. You can install SSL later with:"
     echo "--------------------------------------------------------"
-    echo "sudo certbot --nginx -d $DOMAIN -d www.$DOMAIN"
+    echo "sudo certbot --nginx -d $DOMAIN"
     echo "--------------------------------------------------------"
     SSL_STATUS="SSL Not Installed"
 fi
